@@ -41,17 +41,26 @@ class Solution9 {
     public boolean possibleBipartition(int n, int[][] dislikes) {
         int[] fa = new int[n + 1];
         Arrays.fill(fa, -1);
+
+        // Initialize adjacency list for graph
         List<Integer>[] g = new List[n + 1];
-        for (int i = 0; i < n; ++i) {
-            g[i] = new ArrayList<Integer>();
+        for (int i = 1; i <= n; ++i) {
+            g[i] = new ArrayList<>();
         }
-        for (int[] p : dislikes)
+
+        // Build graph
+        for (int[] p : dislikes) {
             g[p[0]].add(p[1]);
             g[p[1]].add(p[0]);
+        }
+
+        // Process each node and its connections
         for (int i = 1; i <= n; ++i) {
             for (int j = 0; j < g[i].size(); ++j) {
+                // Union the first person with others in the same group
                 unit(g[i].get(0), g[i].get(j), fa);
-                if (isconnect(i, g[i].get(j), fa)) {
+                // If two people are connected, bipartition is not possible
+                if (isConnect(i, g[i].get(j), fa)) {
                     return false;
                 }
             }
@@ -59,28 +68,32 @@ class Solution9 {
         return true;
     }
 
+    // Union-Find function: Union two nodes
     public void unit(int x, int y, int[] fa) {
         x = findFa(x, fa);
         y = findFa(y, fa);
         if (x == y) {
-            return ;
+            return;
         }
         if (fa[x] <= fa[y]) {
-            int temp = x;
-            x = y;
-            y = temp;
+            fa[y] = x;
+        } else {
+            fa[x] = y;
         }
-        fa[x] += fa[y];
-        fa[y] = x;
     }
 
-    public boolean isconnect(int x, int y, int[] fa) {
-        x = findFa(x, fa);
-        y = findFa(y, fa);
-        return x == y;
-    }
-
+    // Union-Find function: Find the root of a node
     public int findFa(int x, int[] fa) {
-        return fa[x] > 0 ? x : (fa[x] = findFa(fa[x], fa));
+        if (fa[x] < 0) {
+            return x;
+        } else {
+            fa[x] = findFa(fa[x], fa);
+            return fa[x];
+        }
+    }
+
+    // Check if two nodes are connected (in the same component)
+    public boolean isConnect(int x, int y, int[] fa) {
+        return findFa(x, fa) == findFa(y, fa);
     }
 }
