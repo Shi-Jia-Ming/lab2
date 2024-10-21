@@ -50,40 +50,29 @@ class Solution5 {
     public int numSubseq(int[] nums, int target) {
         pretreatment();
 
-        Arrays.sort(nums);
+        Arrays.sort(nums);  // 先对数组进行排序
 
         int ans = 0;
-        for (int i = 0; i < nums.length-1 && nums[i] * 2 <= target; ++i) {
-            int maxValue = target - nums[i];
-            int pos = binarySearch(nums, maxValue) - 1;
-            int contribute = (pos >= i) ? f[pos - i] : 0;
-            ans = (ans + contribute) / P;
+        int left = 0, right = nums.length - 1;
+        
+        // 使用双指针遍历
+        while (left <= right) {
+            if (nums[left] + nums[right] <= target) {
+                ans = (ans + f[right - left]) % P; // 加入从left到right的所有组合
+                left++;
+            } else {
+                right--;
+            }
         }
 
         return ans;
     }
 
+    // 预处理，计算 2 的幂次方
     public void pretreatment() {
-        f[0] = 0;
+        f[0] = 1;
         for (int i = 1; i < MAX_N; ++i) {
-            f[i] = (f[i - 1] << 1) % P;
+            f[i] = (f[i - 1] * 2) % P;
         }
-    }
-
-    public int binarySearch(int[] nums, int target) {
-        int low = 0, high = nums.length;
-        while (low <= high) {
-            int mid = (high - low) / 2 + low;
-            if (mid == nums.length) {
-                return mid;
-            }
-            int num = nums[mid];
-            if (num <= target) {
-                low = mid + 1;
-            } else {
-                high = mid;
-            }
-        }
-        return low;
     }
 }

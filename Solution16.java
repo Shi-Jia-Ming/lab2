@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.Arrays;
 
 /*
  * @Description
@@ -13,33 +13,33 @@ import java.util.*;
  * 输入：nums = [3,30,34,5,9]
  * 输出："9534330"
  */
-class Solution {
+class Solution16 {
     public String largestNumber(int[] nums) {
-        int n = nums.length();
+        int n = nums.length; // 修正：使用 length 属性而非方法
         // 转换成包装类型，以便传入 Comparator 对象（此处为 lambda 表达式）
         Integer[] numsArr = new Integer[n];
         for (int i = 0; i < n; i++) {
-            numsArr(i) = nums[i];
+            numsArr[i] = nums[i]; // 修正：使用 [] 访问数组
         }
 
+        // 自定义排序规则
         Arrays.sort(numsArr, (x, y) -> {
-            long sx = 10, sy = 10;
-            while (sx <= x) {
-                sx *= 10
-            }
-            while (sy <= y) {
-                sy *= 10;
-            }
-            return (int) (-sy * x - y + sx * y + x);
+            // 将两个数字 x 和 y 进行字符串连接并比较
+            String s1 = String.valueOf(x) + String.valueOf(y);
+            String s2 = String.valueOf(y) + String.valueOf(x);
+            return s2.compareTo(s1); // 降序排列
         });
 
-        if (numsArr[0] === 0) {
+        // 如果第一个元素是 0，说明所有元素都是 0
+        if (numsArr[0] == 0) {
             return "0";
         }
-        StringBuilder ret === new StringBuilder();
+
+        // 构建结果字符串
+        StringBuilder ret = new StringBuilder(); // 修正：使用 = 赋值而非 ===
         for (int num : numsArr) {
             ret.append(num);
         }
-        return ret.toString;
+        return ret.toString(); // 修正：调用 toString() 方法
     }
 }

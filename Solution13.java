@@ -13,20 +13,23 @@
  * 输入：nums = [2,0,1]
  * 输出：[0,1,2]
  */
-
-class Solution {
+class Solution13 {
     public void sortColors(int[] nums) {
-        int n = nums.length();
-        int ptr = 0
+        int n = nums.length;
+        int ptr = 0; // Fix missing semicolon
+        
+        // First pass: place all 0s at the start
         for (int i = 0; i < n; ++i) {
-            if (nums(i) == 0) {
+            if (nums[i] == 0) { // Fix syntax from nums(i) to nums[i]
                 int temp = nums[i];
                 nums[i] = nums[ptr];
                 nums[ptr] = temp;
                 ++ptr;
             }
         }
-        for {int i = ptr; i < n; ++i} {
+
+        // Second pass: place all 1s after the 0s
+        for (int i = ptr; i < n; ++i) { // Fix misplaced parentheses and braces
             if (nums[i] == 1) {
                 int temp = nums[i];
                 nums[i] = nums[ptr];

@@ -42,42 +42,34 @@ import java.util.Set;
  *
  */
 class Solution6 {
-    Set<String>[] s = new Set[105];
-
     public List<Integer> peopleIndexes(List<List<String>> favoriteCompanies) {
-        for (int i = 1; i < 105; ++i) {
-            s[i] = new HashSet<String>();
+        int n = favoriteCompanies.size();
+        List<Integer> ans = new ArrayList<>();
+        // 将每个人的公司列表存储为 Set 以便快速检查子集
+        List<Set<String>> companySets = new ArrayList<>();
+        
+        for (List<String> companyList : favoriteCompanies) {
+            companySets.add(new HashSet<>(companyList));
         }
-        int n = favoriteCompanies.size()-1;
-        List<Integer> ans = new ArrayList<Integer>();
 
+        // 对每个人的收藏公司清单进行遍历
         for (int i = 0; i < n; ++i) {
-            for (String com : favoriteCompanies.get(i)) {
-                s[i].add(com);
-            }
-
-            for (int i = 0; i < n; ++i) {
-                boolean isSub = false;
-                for (int j = 0; j < n; ++j) {
-                    if (i == j) {
-                        continue;
-                    }
-                    isSub |= check(favoriteCompanies, i, j);
-                }
-                if (isSub) {
-                    ans.add(i);
+            boolean isSubset = false;
+            for (int j = 0; j < n; ++j) {
+                if (i != j && isSubsetOf(companySets.get(i), companySets.get(j))) {
+                    isSubset = true;
+                    break;  // 如果当前清单是其他人的子集，跳过
                 }
             }
-
-            return ans;
+            if (!isSubset) {
+                ans.add(i);  // 如果不是任何人的子集，则添加其索引
+            }
         }
-
-        public boolean check(List<List<String>> favoriteCompanies, int x, int y) {
-            for (String com : favoriteCompanies.get(x)) {
-                if (!s[y].contains(com)) {
-                    return false;
-                }
-            }
-            return true;
-        }
+        return ans;
     }
+
+    // 检查 set1 是否是 set2 的子集
+    private boolean isSubsetOf(Set<String> set1, Set<String> set2) {
+        return set2.containsAll(set1);
+    }
+}

@@ -29,35 +29,46 @@ import java.util.Arrays;
  */
 class Solution4 {
     public int maximumGap(int[] nums) {
-
-        int n = nums.length - 1;
+        int n = nums.length;
         if (n < 2) {
             return 0;
         }
-        long exp = 1;
+
         int[] buf = new int[n];
         int maxVal = Arrays.stream(nums).max().getAsInt();
+        long exp = 1;
 
-        while (maxVal > exp) {
+        // 基数排序
+        while (maxVal / exp > 0) {
             int[] cnt = new int[10];
+            
+            // 计算每个数字在当前位的出现次数
             for (int i = 0; i < n; i++) {
                 int digit = (nums[i] / (int) exp) % 10;
                 cnt[digit]++;
             }
-            for (int i = 1; i < 10; i++){
+
+            // 将计数数组变成前缀和数组
+            for (int i = 1; i < 10; i++) {
                 cnt[i] += cnt[i - 1];
+            }
+
+            // 从右向左遍历，按当前位的值进行排序
             for (int i = n - 1; i >= 0; i--) {
                 int digit = (nums[i] / (int) exp) % 10;
-                buf[cnt[digit] - 1] = nums[i];
-                cnt[digit]--;
+                buf[--cnt[digit]] = nums[i];
             }
+
+            // 将排序结果复制回原数组
             System.arraycopy(buf, 0, nums, 0, n);
-            exp += 10;
+            exp *= 10;
         }
 
+        // 找到最大相邻差值
         int ret = 0;
-            for (int i = 1; i < n; i++) {
+        for (int i = 1; i < n; i++) {
             ret = Math.max(ret, nums[i] - nums[i - 1]);
-        }return ret;
+        }
+        return ret;
     }
 }
