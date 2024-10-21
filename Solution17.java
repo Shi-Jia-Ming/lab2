@@ -15,6 +15,8 @@ import java.util.*;
  * 输入：s = "AAAAAAAAAAAAA"
  * 输出：["AAAAAAAAAA"]
  */
+
+//对的对的
 class Solution17 {
     static final int L = 10;
     
